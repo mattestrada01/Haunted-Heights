@@ -10,32 +10,30 @@ public class constants {
     }
 
     public static class PlayerConstants {
-        public static final int IDLE = 0;
-        public static final int RUNNING = 1;
-        public static final int JUMPING = 2;
-        public static final int FALLING = 3;
-        public static final int GROUND = 4;
-        public static final int HIT = 5;
-        public static final int ATTACK_1 = 6;
-        public static final int ATTACK_JUMP1 = 7;
-        public static final int ATTACK_JUMP2 = 8;
+        public static final int IDLE = 4;
+        public static final int RUNNING = 6;
+        public static final int JUMPING = 5;
+        public static final int HIT = 3;
+        public static final int ATTACK_1 = 0;
+        public static final int ATTACK_2 = 1;
+        public static final int DEAD = 2;
 
         public static int GetSpriteID(int player_action){
             switch(player_action) {
                 case RUNNING:
-                    return 6;
+                    return 8;
                 case IDLE:
                     return 5;
                 case HIT:
-                    return 4;
-                case JUMPING:
-                case ATTACK_1:
-                case ATTACK_JUMP1:
-                case ATTACK_JUMP2:
-                    return 3;
-                case GROUND:
                     return 2;
-                case FALLING: 
+                case JUMPING:
+                    return 8;
+                case ATTACK_1:
+                    return 6;
+                case ATTACK_2:
+                    return 10;
+                case DEAD:
+                    return 5; 
                 default:
                     return 1;
             }
