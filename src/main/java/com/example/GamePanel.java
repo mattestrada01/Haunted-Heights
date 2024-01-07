@@ -19,10 +19,11 @@ public class GamePanel extends JPanel{
     private float xDelta = 100, yDelta = 100;
     private BufferedImage image;
     private BufferedImage[][] animations;
-    private int animationTick, animationIndex, animationSpeed = 30;
+    private int animationTick, animationIndex, animationSpeed = 40;
     private int playerAction = IDLE;
     private int playerDirection = -1;
     private boolean moving = false;
+    private boolean animationComplete = true;
 
 
     public GamePanel() {
@@ -38,7 +39,7 @@ public class GamePanel extends JPanel{
     }
 
     private void loadAnimations() {
-        animations = new BufferedImage[7][10];
+        animations = new BufferedImage[8][10];
         for (int j = 0; j < animations.length; j++){
              for (int i = 0; i < animations[j].length; i++){
                 animations[j][i] = image.getSubimage(i*128, j*128, 128, 128);
@@ -47,7 +48,7 @@ public class GamePanel extends JPanel{
     }
 
     private void importImage() {
-        File is = new File("src/main/resources/enchant_sprite.png");
+        File is = new File("src/main/resources/enchant_sprite1.png");
     
         try {
             image = ImageIO.read(is);
@@ -78,7 +79,12 @@ public class GamePanel extends JPanel{
             animationTick = 0;
             animationIndex++;
             if(animationIndex >= GetSpriteID(playerAction)) {
+                animationComplete = true;
                 animationIndex = 0;
+            }
+
+            else {
+                animationComplete = false;
             }
         }
     }
@@ -86,9 +92,17 @@ public class GamePanel extends JPanel{
     private void setAnimation() {
         if (moving) {
             playerAction = RUNNING;
+            this.animationSpeed = 25;
+
         }
         else {
             playerAction = IDLE;
+            this.animationSpeed = 40;
+
+        }
+
+        if (animationComplete) {
+            animationIndex = 0;
         }
     }
 
@@ -111,14 +125,20 @@ public class GamePanel extends JPanel{
         }
     }
 
-    public void updateGame() {
+    public void setAnimationSpeed(int speed) {
+        this.animationSpeed = speed;
+    }
+
+    public synchronized void updateGame() {
         updateAnimation();
         setAnimation();
         updatePostion();
     }
 
-    public void paintComponent(Graphics g) {
+    public synchronized void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(animations[playerAction][animationIndex], (int)xDelta, (int)yDelta, 192, 192, null);
+        if (animationIndex < GetSpriteID(playerAction)) {
+            g.drawImage(animations[playerAction][animationIndex], (int)xDelta, (int)yDelta, 160, 160, null);
+        }
     }
 }

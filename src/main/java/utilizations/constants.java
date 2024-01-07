@@ -17,6 +17,7 @@ public class constants {
         public static final int ATTACK_1 = 0;
         public static final int ATTACK_2 = 1;
         public static final int DEAD = 2;
+        public static final int FALLING = 7;
 
         public static int GetSpriteID(int player_action){
             switch(player_action) {
@@ -34,6 +35,7 @@ public class constants {
                     return 10;
                 case DEAD:
                     return 5; 
+                case FALLING:
                 default:
                     return 1;
             }
