@@ -6,6 +6,7 @@ public class Game implements Runnable {
     private GamePanel gamePanel;
     private Thread gameLoopThread;
     private final int FPS = 143;
+    private final int UPS = 200;
 
     public Game() {
         gamePanel = new GamePanel();
@@ -19,29 +20,52 @@ public class Game implements Runnable {
         gameLoopThread.start();
     }
 
+    public void update() {
+        gamePanel.updateGame();
+    }
+
 
     @Override
     public void run() {
 
         double timePerFrame = 1000000000.0 / FPS;
-        long lastFrame = System.nanoTime();
-        long now = System.nanoTime();
+        double timePerUpdate = 1000000000.0 / UPS;
+
+        long previousTime = System.nanoTime();
+
+
         int frameCount = 0;
         long lastChecked = System.currentTimeMillis();
+        long updateCount = 0;
+
+        double deltaU = 0;
+        double deltaF = 0;
 
         while(true) {
-            now = System.nanoTime();
-            if (System.nanoTime() - lastFrame >= timePerFrame) {
+            long currentTime = System.nanoTime();
+
+            deltaU += (currentTime - previousTime) / timePerUpdate;
+            deltaF += (currentTime - previousTime) / timePerFrame;
+            previousTime = currentTime;
+
+            if (deltaU >= 1) {
+                update();
+                updateCount++;
+                deltaU--;
+            }
+
+            if (deltaF >= 1) {
                 gamePanel.repaint();
-                lastFrame = now;
+                deltaF--;
                 frameCount++;
             }
         
-        if(System.currentTimeMillis() - lastChecked >= 1000) {
-            lastChecked = System.currentTimeMillis();
-            System.out.println("FPS - " + frameCount);
-            frameCount = 0;
-        }
+            if(System.currentTimeMillis() - lastChecked >= 1000) {
+                lastChecked = System.currentTimeMillis();
+                System.out.println("FPS - " + frameCount + " | UPS - " + updateCount);
+                frameCount = 0;
+                updateCount = 0;
+            }
         }
     }
 }
