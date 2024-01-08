@@ -1,0 +1,163 @@
+package entities;
+
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import static utilizations.constants.PlayerConstants.*;
+import static utilizations.constants.Directions.*;
+
+
+public class Player extends Entity{
+
+    private BufferedImage[][] animations;
+    private int animationTick, animationIndex, animationSpeed = 40;
+    private int playerAction = IDLE;
+    private boolean left, right, up, down;
+    private boolean moving = false, attacking = false;
+    private boolean animationComplete = true;
+    private float playerSpeed = 2.0f;
+
+    public Player(float x, float y) {
+        super(x, y);
+        loadAnimations();
+    }
+
+    public void update() {
+        updatePostion();
+        updateAnimation();
+        setAnimation();
+    }
+
+    public void render(Graphics g) {
+        if (animationIndex < GetSpriteID(playerAction)) {
+            g.drawImage(animations[playerAction][animationIndex], (int)x, (int)y, 160, 160, null);
+        }
+    }
+
+    private void updateAnimation() {
+        animationTick++;
+        if (animationTick >= animationSpeed) {
+            animationTick = 0;
+            animationIndex++;
+            if(animationIndex >= GetSpriteID(playerAction)) {
+                animationComplete = true;
+                animationIndex = 0;
+                attacking = false;
+            }
+
+            else {
+                animationComplete = false;
+            }
+        }
+    }
+
+    private void setAnimation() {
+        if (moving) {
+            playerAction = RUNNING;
+            this.animationSpeed = 20;
+
+        }
+        else {
+            playerAction = IDLE;
+            this.animationSpeed = 40;
+
+        }
+
+        if (attacking) {
+            playerAction = ATTACK_1;
+        }
+
+        if (animationComplete) {
+            animationIndex = 0;
+        }
+    }
+
+    private void updatePostion() {
+
+        moving = false;
+
+        if (left && !right) {
+            moving = true;
+            x-=playerSpeed;
+       }
+        else if (right && !left) {
+            moving = true;
+            x+=playerSpeed;
+       }
+
+        if (up && !down) {
+            moving = true;
+            y-=playerSpeed;
+       }
+        else if (down && !up) {
+            moving = true;
+            y+=playerSpeed;
+       }
+    }
+
+    public void setAnimationSpeed(int speed) {
+        this.animationSpeed = speed;
+    }
+
+    private void loadAnimations() {
+
+        File is = new File("src/main/resources/enchant_sprite1.png");
+    
+        try {
+            BufferedImage image = ImageIO.read(is);
+            animations = new BufferedImage[8][10];
+        for (int j = 0; j < animations.length; j++){
+             for (int i = 0; i < animations[j].length; i++){
+                animations[j][i] = image.getSubimage(i*128, j*128, 128, 128);
+            }
+        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isLeft() {
+        return left;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isUp() {
+        return up;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    public void resetDirectionBooleans() {
+        up = false;
+        down = false;
+        left = false;
+        right = false;
+    } 
+
+    public void setAttack(boolean attacking) {
+        this.attacking = attacking;
+    }
+}
