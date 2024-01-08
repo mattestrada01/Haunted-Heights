@@ -2,10 +2,6 @@ package com.example.inputs;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-import org.w3c.dom.events.MouseEvent;
-
-import static utilizations.constants.Directions.*;
 import com.example.GamePanel;
 
 public class KeyboardInputs implements KeyListener {
