@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import utilizations.LoadSave;
+
 import static utilizations.constants.PlayerConstants.*;
 import static utilizations.constants.Directions.*;
 
@@ -118,19 +121,15 @@ public class Player extends Entity{
 
     private void loadAnimations() {
 
-        File is = new File("src/main/resources/enchant_sprite1.png");
-    
-        try {
-            BufferedImage image = ImageIO.read(is);
+        //File is = new File("src/main/resources/enchant_sprite1.png");
+        
+            BufferedImage image = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
             animations = new BufferedImage[8][10];
         for (int j = 0; j < animations.length; j++){
              for (int i = 0; i < animations[j].length; i++){
                 animations[j][i] = image.getSubimage(i*128, j*128, 128, 128);
             }
-        }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }   
     }
 
     public boolean isLeft() {
