@@ -2,6 +2,9 @@ package com.example.inputs;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import org.w3c.dom.events.MouseEvent;
+
 import static utilizations.constants.Directions.*;
 import com.example.GamePanel;
 
@@ -32,6 +35,10 @@ public class KeyboardInputs implements KeyListener {
             case KeyEvent.VK_D:
                 gamePanel.getGame().getPlayer().setRight(true);
                 break;  
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+            gamePanel.getGame().getPlayer().setJump(true);
         }
     }
 

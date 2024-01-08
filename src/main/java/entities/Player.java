@@ -15,7 +15,7 @@ public class Player extends Entity{
     private int animationTick, animationIndex, animationSpeed = 40;
     private int playerAction = IDLE;
     private boolean left, right, up, down;
-    private boolean moving = false, attacking = false;
+    private boolean moving = false, attacking = false, attacking2 = false, jumping = false;
     private boolean animationComplete = true;
     private float playerSpeed = 2.0f;
 
@@ -45,6 +45,8 @@ public class Player extends Entity{
                 animationComplete = true;
                 animationIndex = 0;
                 attacking = false;
+                attacking2 = false;
+                jumping = false;
             }
 
             else {
@@ -67,6 +69,17 @@ public class Player extends Entity{
 
         if (attacking) {
             playerAction = ATTACK_1;
+            this.animationSpeed = 20;
+        }
+
+        if (attacking2) {
+            playerAction = ATTACK_2;
+            this.animationSpeed = 20;
+        }
+
+        if (jumping) {
+            playerAction = JUMPING;
+            this.animationSpeed = 20;
         }
 
         if (animationComplete) {
@@ -159,5 +172,13 @@ public class Player extends Entity{
 
     public void setAttack(boolean attacking) {
         this.attacking = attacking;
+    }
+
+    public void setAttack2(boolean attacking2) {
+        this.attacking2 = attacking2;
+    }
+
+    public void setJump(boolean jumping) {
+        this.jumping = jumping;
     }
 }
