@@ -34,11 +34,11 @@ public class KeyboardInputs implements KeyListener {
                 break;
             case KeyEvent.VK_D:
                 gamePanel.getGame().getPlayer().setRight(true);
-                break;  
-        }
-
-        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-            gamePanel.getGame().getPlayer().setJump(true);
+                break; 
+            case KeyEvent.VK_SPACE:
+                gamePanel.getGame().getPlayer().setUp(true);
+                gamePanel.getGame().getPlayer().setJump(true);
+                break;   
         }
     }
 
@@ -56,6 +56,9 @@ public class KeyboardInputs implements KeyListener {
                 break;
             case KeyEvent.VK_D:
                 gamePanel.getGame().getPlayer().setRight(false);
+                break;  
+            case KeyEvent.VK_SPACE:
+                gamePanel.getGame().getPlayer().setUp(false);
                 break;  
         }
     }

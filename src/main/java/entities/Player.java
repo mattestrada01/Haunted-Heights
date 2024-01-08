@@ -16,7 +16,6 @@ public class Player extends Entity{
     private int playerAction = IDLE;
     private boolean left, right, up, down;
     private boolean moving = false, attacking = false, attacking2 = false, jumping = false;
-    private boolean animationComplete = true;
     private float playerSpeed = 2.0f;
 
     public Player(float x, float y) {
@@ -42,20 +41,18 @@ public class Player extends Entity{
             animationTick = 0;
             animationIndex++;
             if(animationIndex >= GetSpriteID(playerAction)) {
-                animationComplete = true;
                 animationIndex = 0;
                 attacking = false;
                 attacking2 = false;
                 jumping = false;
             }
-
-            else {
-                animationComplete = false;
-            }
         }
     }
 
     private void setAnimation() {
+
+        int startAnimation = playerAction;
+
         if (moving) {
             playerAction = RUNNING;
             this.animationSpeed = 20;
@@ -69,22 +66,27 @@ public class Player extends Entity{
 
         if (attacking) {
             playerAction = ATTACK_1;
-            this.animationSpeed = 20;
+            this.animationSpeed = 15;
         }
 
         if (attacking2) {
             playerAction = ATTACK_2;
-            this.animationSpeed = 20;
+            this.animationSpeed = 10;
         }
 
         if (jumping) {
             playerAction = JUMPING;
-            this.animationSpeed = 20;
+            this.animationSpeed = 15;
         }
 
-        if (animationComplete) {
-            animationIndex = 0;
+        if (startAnimation != playerAction) {
+            resetAniTick();
         }
+    }
+
+    private void resetAniTick() {
+        animationTick = 0;
+        animationIndex = 0;
     }
 
     private void updatePostion() {
