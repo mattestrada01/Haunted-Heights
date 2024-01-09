@@ -1,5 +1,7 @@
 package utilizations;
 
+import java.awt.geom.Rectangle2D;
+
 import com.example.Game;
 
 public class helper {
@@ -26,5 +28,44 @@ public class helper {
 		if (value >= 48 || value < 0 || value != 11)
 			return true;
 		return false;
+	}
+
+	public static float GetEntityXPosNextToWall(Rectangle2D.Float hitbox, float xSpeed) {
+		int currentTile = (int)(hitbox.x / Game.TILES_SIZE);
+
+		if(xSpeed > 0) {
+			// to the right
+			int tileXpos = currentTile * Game.TILES_SIZE;
+			int xOffset = (int)(Game.TILES_SIZE - hitbox.width);
+			return tileXpos + xOffset - 1;
+		}
+		else {
+			// to the left
+			return currentTile * Game.TILES_SIZE;
+		}
+	}
+
+	public static float GetEntityYPosUnderRoofOrAboveFloor(Rectangle2D.Float hitbox, float airSpeed) {
+		int currentTile = (int)(hitbox.y / Game.TILES_SIZE);
+		if(airSpeed > 0) {
+			// you are falling
+			int tileYpos = currentTile * Game.TILES_SIZE;
+			int yOffset = (int)(Game.TILES_SIZE);
+			return tileYpos + yOffset - 5;
+		}
+		else {
+			// you are jumping
+			return currentTile * Game.TILES_SIZE;
+		}
+	}
+
+	public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, int[][] lvlData) {
+		// Check the pixel below bottomleft and bottomright
+		if (!IsSolid(hitbox.x, hitbox.y + hitbox.height + 1, lvlData))
+			if (!IsSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, lvlData))
+				return false;
+
+		return true;
+
 	}
 }

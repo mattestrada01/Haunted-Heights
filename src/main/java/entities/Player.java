@@ -7,19 +7,24 @@ import com.example.Game;
 
 import utilizations.LoadSave;
 import static utilizations.constants.PlayerConstants.*;
-import static utilizations.helper.CanMoveHere;
+import static utilizations.helper.*;
 
 public class Player extends Entity{
 
     private BufferedImage[][] animations;
     private int animationTick, animationIndex, animationSpeed = 40;
     private int playerAction = IDLE;
-    private boolean left, right, up, down;
-    private boolean moving = false, attacking = false, attacking2 = false, jumping = false, dead = false;
+    private boolean left, right, up, down, jump;
+    private boolean moving = false, attacking = false, attacking2 = false, inAir = false, dead = false;
     private float playerSpeed = 2.0f;
     private int[][] lvlData;
     private float xOffset = 21*Game.SCALE;
     private float yOffset = 30*Game.SCALE;
+
+    private float airSpeed = 0f;
+    private float gravity = 0.04f * Game.SCALE;
+    private float jumpSpeed = -2.25f * Game.SCALE;
+    private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
@@ -28,7 +33,7 @@ public class Player extends Entity{
     }
 
     public void update() {
-        updatePostion();
+        updatePosition();
         updateAnimation();
         setAnimation();
     }
@@ -47,7 +52,6 @@ public class Player extends Entity{
                 animationIndex = 0;
                 attacking = false;
                 attacking2 = false;
-                jumping = false;
                 dead = false;
             }
         }
@@ -78,14 +82,14 @@ public class Player extends Entity{
             this.animationSpeed = 10;
         }
 
-        if (jumping) {
-            playerAction = JUMPING;
-            this.animationSpeed = 15;
-        }
-
         if (dead) {
             playerAction = DEAD;
             this.animationSpeed = 30;
+        }
+
+        if (inAir) { 
+                playerAction = JUMPING;
+                this.animationSpeed = 15;
         }
 
         if (startAnimation != playerAction) {
@@ -98,55 +102,72 @@ public class Player extends Entity{
         animationIndex = 0;
     }
 
-    private void updatePostion() {
+    private void updatePosition() {
+		moving = false;
 
-        moving = false;
+		if (jump)
+			jump();
+		if (!left && !right && !inAir)
+			return;
 
-        if(!left && !right && !up && !down){
+		float xSpeed = 0;
+
+		if (left)
+			xSpeed -= playerSpeed;
+		if (right)
+			xSpeed += playerSpeed;
+
+		if (!inAir)
+			if (!IsEntityOnFloor(hitbox, lvlData))
+				inAir = true;
+
+		if (inAir) {
+			if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+				hitbox.y += airSpeed;
+				airSpeed += gravity;
+				updateXPos(xSpeed);
+			} else {
+				hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
+				if (airSpeed > 0)
+					resetInAir();
+				else
+					airSpeed = fallSpeedAfterCollision;
+				updateXPos(xSpeed);
+			}
+
+		} else
+			updateXPos(xSpeed);
+		moving = true;
+	}
+
+    private void jump() {
+        if (inAir) {
             return;
         }
 
-        float xSpeed = 0, ySpeed = 0;
-
-        if (left && !right) {
-            //moving = true;
-            xSpeed = -playerSpeed;
-       }
-        else if (right && !left) {
-            //moving = true;
-            xSpeed = playerSpeed;
-       }
-
-        if (up && !down) {
-            //moving = true;
-            ySpeed = -playerSpeed;
-       }
-        else if (down && !up) {
-            //moving = true;
-            ySpeed = playerSpeed;
-       }
-
-   //    if(CanMoveHere(x+xSpeed, y+ySpeed, width, height, lvlData)){
-   //         this.x += xSpeed;
-   //        this.y += ySpeed;
-   //         moving = true;
-   //    }
-
-          if(CanMoveHere(hitbox.x+xSpeed, hitbox.y+ySpeed, hitbox.width, hitbox.height, lvlData)){
-            hitbox.x += xSpeed;
-            hitbox.y += ySpeed;
-            moving = true;
-       }
+        inAir = true;
+        airSpeed = jumpSpeed;
     }
+
+    private void resetInAir() {
+        inAir = false;
+        airSpeed = 0;
+    }
+
+	private void updateXPos(float xSpeed) {
+		if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
+			hitbox.x += xSpeed;
+		} else {
+			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
+		}
+
+	}
 
     public void setAnimationSpeed(int speed) {
         this.animationSpeed = speed;
     }
 
-    private void loadAnimations() {
-
-        //File is = new File("src/main/resources/enchant_sprite1.png");
-        
+    private void loadAnimations() {        
         BufferedImage image = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
         animations = new BufferedImage[8][10];
         for (int j = 0; j < animations.length; j++){
@@ -158,6 +179,9 @@ public class Player extends Entity{
 
     public void loadLvlData(int[][] lvlData) {
         this.lvlData = lvlData;
+        if (!IsEntityOnFloor(hitbox, lvlData)){
+            inAir = true;
+        }
     }
 
     public boolean isLeft() {
@@ -207,11 +231,11 @@ public class Player extends Entity{
         this.attacking2 = attacking2;
     }
 
-    public void setJump(boolean jumping) {
-        this.jumping = jumping;
-    }
-
     public void setDead(boolean dead) {
         this.dead = dead;
     }
+
+    public void setJump(boolean jump) {
+        this.jump = jump;
+    }    
 }
