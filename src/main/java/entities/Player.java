@@ -18,7 +18,7 @@ public class Player extends Entity{
     private boolean moving = false, attacking = false, attacking2 = false, inAir = false, dead = false;
     private float playerSpeed = 2.0f;
     private int[][] lvlData;
-    private float xOffset = 21*Game.SCALE;
+    private float xOffset = 20*Game.SCALE;
     private float yOffset = 30*Game.SCALE;
 
     private float airSpeed = 0f;
@@ -29,7 +29,7 @@ public class Player extends Entity{
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
-        initHitbox(x, y, 22*Game.SCALE, 34*Game.SCALE);
+        initHitbox(x, y, 23*Game.SCALE, 34*Game.SCALE);
     }
 
     public void update() {
@@ -123,9 +123,11 @@ public class Player extends Entity{
 
 		if (inAir) {
 			if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
-				hitbox.y += airSpeed;
-				airSpeed += gravity;
-				updateXPos(xSpeed);
+                
+				    hitbox.y += airSpeed;
+				    airSpeed += gravity;
+				    updateXPos(xSpeed);
+                
 			} else {
 				hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
 				if (airSpeed > 0)

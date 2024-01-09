@@ -8,9 +8,13 @@ public class helper {
     public static boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) {
 		if (!IsSolid(x, y, lvlData))
 			if (!IsSolid(x + width, y + height, lvlData))
-				if (!IsSolid(x + width, y, lvlData))
-					if (!IsSolid(x, y + height, lvlData))
-						return true;
+			// to check midwall on right side
+				if (!IsSolid(x + width, y + height - 64, lvlData))
+					if (!IsSolid(x + width, y, lvlData))
+						if (!IsSolid(x, y + height, lvlData))
+						// to check the mid wall on left side
+							if (!IsSolid(x, y + height - 64, lvlData))
+								return true;
 		return false;
 	}
 
@@ -37,7 +41,7 @@ public class helper {
 			// to the right
 			int tileXpos = currentTile * Game.TILES_SIZE;
 			int xOffset = (int)(Game.TILES_SIZE - hitbox.width);
-			return tileXpos + xOffset - 1;
+			return tileXpos + xOffset - 2;
 		}
 		else {
 			// to the left
