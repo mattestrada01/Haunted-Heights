@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import com.example.Game;
+
 import utilizations.LoadSave;
 
 import static utilizations.constants.PlayerConstants.*;
@@ -18,7 +20,7 @@ public class Player extends Entity{
     private int animationTick, animationIndex, animationSpeed = 40;
     private int playerAction = IDLE;
     private boolean left, right, up, down;
-    private boolean moving = false, attacking = false, attacking2 = false, jumping = false;
+    private boolean moving = false, attacking = false, attacking2 = false, jumping = false, dead = false;
     private float playerSpeed = 2.0f;
 
     public Player(float x, float y) {
@@ -34,7 +36,7 @@ public class Player extends Entity{
 
     public void render(Graphics g) {
         if (animationIndex < GetSpriteID(playerAction)) {
-            g.drawImage(animations[playerAction][animationIndex], (int)x, (int)y, 160, 160, null);
+            g.drawImage(animations[playerAction][animationIndex], (int)x, (int)y, Game.CHAR_DIMENSION, Game.CHAR_DIMENSION, null);
         }
     }
 
@@ -48,6 +50,7 @@ public class Player extends Entity{
                 attacking = false;
                 attacking2 = false;
                 jumping = false;
+                dead = false;
             }
         }
     }
@@ -80,6 +83,11 @@ public class Player extends Entity{
         if (jumping) {
             playerAction = JUMPING;
             this.animationSpeed = 15;
+        }
+
+        if (dead) {
+            playerAction = DEAD;
+            this.animationSpeed = 30;
         }
 
         if (startAnimation != playerAction) {
@@ -123,8 +131,8 @@ public class Player extends Entity{
 
         //File is = new File("src/main/resources/enchant_sprite1.png");
         
-            BufferedImage image = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
-            animations = new BufferedImage[8][10];
+        BufferedImage image = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+        animations = new BufferedImage[8][10];
         for (int j = 0; j < animations.length; j++){
              for (int i = 0; i < animations[j].length; i++){
                 animations[j][i] = image.getSubimage(i*128, j*128, 128, 128);
@@ -181,5 +189,9 @@ public class Player extends Entity{
 
     public void setJump(boolean jumping) {
         this.jumping = jumping;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
     }
 }
