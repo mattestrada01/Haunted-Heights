@@ -9,11 +9,11 @@ public class helper {
 		if (!IsSolid(x, y, lvlData))
 			if (!IsSolid(x + width, y + height, lvlData))
 			// to check midwall on right side
-				if (!IsSolid(x + width, y + height - 64, lvlData))
+				if (!IsSolid(x + width, y + height - (32*Game.SCALE), lvlData))
 					if (!IsSolid(x + width, y, lvlData))
 						if (!IsSolid(x, y + height, lvlData))
 						// to check the mid wall on left side
-							if (!IsSolid(x, y + height - 64, lvlData))
+							if (!IsSolid(x, y + height - (32*Game.SCALE), lvlData))
 								return true;
 		return false;
 	}
@@ -41,7 +41,7 @@ public class helper {
 			// to the right
 			int tileXpos = currentTile * Game.TILES_SIZE;
 			int xOffset = (int)(Game.TILES_SIZE - hitbox.width);
-			return tileXpos + xOffset - 2;
+			return tileXpos + xOffset - 1;
 		}
 		else {
 			// to the left
@@ -55,7 +55,7 @@ public class helper {
 			// you are falling
 			int tileYpos = currentTile * Game.TILES_SIZE;
 			int yOffset = (int)(Game.TILES_SIZE);
-			return tileYpos + yOffset - 5;
+			return tileYpos + yOffset - 2.5f*Game.SCALE;
 		}
 		else {
 			// you are jumping
