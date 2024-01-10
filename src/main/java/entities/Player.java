@@ -19,7 +19,7 @@ public class Player extends Entity{
     private float playerSpeed = Game.SCALE;
     private int[][] lvlData;
     private float xOffset = 20*Game.SCALE;
-    private float yOffset = 30*Game.SCALE;
+    private float yOffset = 29*Game.SCALE;
 
     private float airSpeed = 0f;
     private float gravity = 0.04f * Game.SCALE;
