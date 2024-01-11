@@ -23,7 +23,7 @@ public class Player extends Entity{
 
     private float airSpeed = 0f;
     private float gravity = 0.04f * Game.SCALE;
-    private float jumpSpeed = -2.25f * Game.SCALE;
+    private float jumpSpeed = -2.3f * Game.SCALE;
     private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
 
     public Player(float x, float y, int width, int height) {
@@ -64,7 +64,6 @@ public class Player extends Entity{
         if (moving) {
             playerAction = RUNNING;
             this.animationSpeed = 20;
-
         }
         else {
             playerAction = IDLE;
@@ -123,7 +122,6 @@ public class Player extends Entity{
 
 		if (inAir) {
 			if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
-                
 				    hitbox.y += airSpeed;
 				    airSpeed += gravity;
 				    updateXPos(xSpeed);
