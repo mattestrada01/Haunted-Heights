@@ -14,7 +14,6 @@ public class LevelManager {
 
     public LevelManager(Game game) {
         this.game = game;
-        //levelSprite = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS);
         importOutsideSprites();
         level1 = new Level(LoadSave.GetLevelData());
     }
