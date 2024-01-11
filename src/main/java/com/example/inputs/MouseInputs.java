@@ -3,8 +3,8 @@ package com.example.inputs;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-
 import com.example.GamePanel;
+import gamestates.Gamestate;
 
 public class MouseInputs implements MouseListener, MouseMotionListener{
 
@@ -16,16 +16,15 @@ public class MouseInputs implements MouseListener, MouseMotionListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON1) {
-            gamePanel.getGame().getPlayer().setAttack(true);
-        }
-
-        if(e.getButton() == MouseEvent.BUTTON3) {
-            gamePanel.getGame().getPlayer().setAttack2(true);
-        }
-
-        if(e.getButton() == MouseEvent.BUTTON2) {
-            gamePanel.getGame().getPlayer().setDead(true);
+        switch (Gamestate.state) {
+            case MENU:
+                gamePanel.getGame().getMenu().mouseClicked(e);
+                break;
+            case PLAYING:
+                gamePanel.getGame().getPlaying().mouseClicked(e);
+                break;
+            default:
+                break;
         }
     }
 
