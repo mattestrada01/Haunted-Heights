@@ -13,7 +13,7 @@ public class Playing extends State implements Statemethods{
     private Player player;
     private LevelManager levelManager;
     private PauseOverlay pauseOverlay;
-    private boolean pausedOrNot = true;
+    private boolean pausedOrNot = false;
 
     public Playing(Game game) {
         super(game);
@@ -25,21 +25,28 @@ public class Playing extends State implements Statemethods{
         // 130 and 570 for proper start
         player = new Player(130, 200, (int)(64*Game.SCALE), (int)(64*Game.SCALE));
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
-        pauseOverlay = new PauseOverlay();
+        pauseOverlay = new PauseOverlay(this);
     }
 
     @Override
     public void update() {
-        levelManager.update();
-        player.update();
-        pauseOverlay.update();
+        if(!pausedOrNot) {
+            levelManager.update();
+            player.update();
+        }
+        else {
+            pauseOverlay.update();
+        }
     }
 
     @Override
     public void draw(Graphics g) {
         levelManager.draw(g);
         player.render(g);
-        pauseOverlay.draw(g);
+
+        if(pausedOrNot) {
+            pauseOverlay.draw(g);
+        }
     }
 
     @Override
@@ -78,6 +85,12 @@ public class Playing extends State implements Statemethods{
         }
     }
 
+    public void mouseDragged(MouseEvent e) {
+        if(pausedOrNot) {
+            pauseOverlay.mouseDragged(e);
+        }
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -90,8 +103,9 @@ public class Playing extends State implements Statemethods{
             case KeyEvent.VK_SPACE:
                 player.setJump(true);
                 break; 
-            case KeyEvent.VK_BACK_SPACE:
-                Gamestate.state = Gamestate.MENU;
+            case KeyEvent.VK_ESCAPE:
+                pausedOrNot = !pausedOrNot;
+                break;
         }
     }
 
@@ -108,6 +122,10 @@ public class Playing extends State implements Statemethods{
                 player.setJump(false);
                 break;  
         }
+    }
+
+    public void unpauseGame() {
+        pausedOrNot = false;
     }
 
     public Player getPlayer() {

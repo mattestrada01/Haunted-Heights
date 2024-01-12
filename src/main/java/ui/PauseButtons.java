@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 
 public class PauseButtons {
     protected int x, y, width, height;
-    private Rectangle bounds;
+    protected Rectangle bounds;
     
     public PauseButtons(int x, int y, int width, int height) {
         this.x = x;
