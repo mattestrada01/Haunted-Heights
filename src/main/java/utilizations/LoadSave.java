@@ -11,14 +11,22 @@ import com.example.Game;
 public class LoadSave {
 
     public static final String PLAYER_ATLAS = "src/main/resources/enchant_sprite1.png";
-    public static final String LEVEL_ATLAS = "src/main/resources/outside_sprites.png";
-    public static final String LEVEL_ONE_DATA = "src/main/resources/level_one_data.png";
-    public static final String MENU_BUTTONS = "src/main/resources/buttons_menu.png";
-    public static final String MENU = "src/main/resources/menu.png";
-    public static final String PAUSE = "src/main/resources/pause.png";
+    public static final String LEVEL_ATLAS = "src/main/resources/outsideSprites1.png";
+    //public static final String LEVEL_ONE_DATA = "src/main/resources/level_one_data.png";
+    public static final String LEVEL_ONE_DATA = "src/main/resources/level_one_data_long.png";
+    public static final String MENU_BUTTONS = "src/main/resources/menu_buttons3.png";
+    public static final String MENU = "src/main/resources/menu3.png";
+    public static final String PAUSE = "src/main/resources/pause3.png";
     public static final String SOUND_BUTTON = "src/main/resources/sound_button.png";
     public static final String URM_BUTTONS = "src/main/resources/urm_buttons.png";
     public static final String VOLUME_BUTTONS = "src/main/resources/volume_buttons.png";
+    public static final String MENU_IMAGE = "src/main/resources/scaryBackground.png";
+    public static final String PLAYING_BACKGROUND = "src/main/resources/background1.0.png";
+    public static final String CLOUD_BIG = "src/main/resources/clouds4.png";
+    public static final String CLOUD_BIG2 = "src/main/resources/clouds3.png";
+    public static final String CLOUD_SMALL = "src/main/resources/small.png";
+    public static final String HANDS = "src/main/resources/hands.png";
+    public static final String BOTTOM = "src/main/resources/bottomGround.png";
 
 
     public static BufferedImage GetSpriteAtlas(String fileName) {
@@ -35,8 +43,8 @@ public class LoadSave {
         }
 
     public static int[][] GetLevelData() {
-        int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
         BufferedImage image = GetSpriteAtlas(LEVEL_ONE_DATA);
+        int[][] lvlData = new int[image.getHeight()][image.getWidth()];
 
         for (int j = 0; j < image.getHeight(); j++) {
             for (int i = 0; i < image.getWidth(); i++) {
