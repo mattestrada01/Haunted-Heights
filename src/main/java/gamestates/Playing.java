@@ -1,12 +1,18 @@
 package gamestates;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Random;
+
 import com.example.Game;
 import entities.Player;
 import levels.LevelManager;
 import ui.PauseOverlay;
+import utilizations.LoadSave;
+import static utilizations.constants.Environments.*;
 
 public class Playing extends State implements Statemethods{
 
@@ -15,9 +21,31 @@ public class Playing extends State implements Statemethods{
     private PauseOverlay pauseOverlay;
     private boolean pausedOrNot = false;
 
+    private int xLevelOffset;
+    private int leftBorder = (int)(0.2 * Game.GAME_WIDTH);
+    private int rightBorder = (int)(0.8 * Game.GAME_WIDTH);
+    private int levelTilesWide = LoadSave.GetLevelData()[0].length;
+    private int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;
+    private int maxXLevelOffset = maxTilesOffset * Game.TILES_SIZE;
+
+    private BufferedImage movingBackground, bigCloudImage, smallCloudImage, bigCloudImage2, handsImage, bottomImage;
+    private int[] smallClouds;
+    private Random rand = new Random();
+
     public Playing(Game game) {
         super(game);
         initializeClasses();
+
+        movingBackground = LoadSave.GetSpriteAtlas(LoadSave.PLAYING_BACKGROUND);
+        bigCloudImage = LoadSave.GetSpriteAtlas(LoadSave.CLOUD_BIG);
+        smallCloudImage = LoadSave.GetSpriteAtlas(LoadSave.CLOUD_SMALL);
+        bigCloudImage2 = LoadSave.GetSpriteAtlas(LoadSave.CLOUD_BIG2);
+        handsImage = LoadSave.GetSpriteAtlas(LoadSave.HANDS);
+        bottomImage = LoadSave.GetSpriteAtlas(LoadSave.BOTTOM);
+        smallClouds = new int[8];
+
+        for (int i = 0; i < smallClouds.length; i++) 
+            smallClouds[i] = (int)(120 * Game.SCALE) + rand.nextInt((int)(70*Game.SCALE));
     }
 
     private void initializeClasses() {
@@ -33,20 +61,59 @@ public class Playing extends State implements Statemethods{
         if(!pausedOrNot) {
             levelManager.update();
             player.update();
+            checkIfAtBorder();
         }
         else {
             pauseOverlay.update();
         }
     }
 
+    private void checkIfAtBorder() {
+        int playerX = (int) player.getHitbox().x;
+        int difference = playerX - xLevelOffset;
+
+        if(difference > rightBorder) 
+            xLevelOffset += difference - rightBorder;
+        else if(difference < leftBorder) 
+            xLevelOffset += difference - leftBorder;
+        
+
+        if(xLevelOffset > maxXLevelOffset) 
+            xLevelOffset = maxXLevelOffset;
+        else if(xLevelOffset < 0) 
+            xLevelOffset = 0;
+    }
+
     @Override
     public void draw(Graphics g) {
-        levelManager.draw(g);
-        player.render(g);
+        g.drawImage(movingBackground, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+
+        // must change for smaller scale
+        g.drawImage(handsImage, 975 - (int)(xLevelOffset), 721, HANDS_WIDTH, HANDS_HEIGHT, null);
+        g.drawImage(bottomImage, 850 - (int)(xLevelOffset), 598, Game.GAME_WIDTH / 3, Game.GAME_HEIGHT / 3, null);
+        
+        drawClouds(g);
+
+        levelManager.draw(g, xLevelOffset);
+        player.render(g, xLevelOffset);
 
         if(pausedOrNot) {
+            g.setColor(new Color(0,0,0, 175));
+            g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
             pauseOverlay.draw(g);
         }
+    }
+
+    private void drawClouds(Graphics g) {
+        // must change for smaller scale
+        for (int i = 0; i < 4; i++) 
+            g.drawImage(bigCloudImage2, -150 + i * BIG_CLOUD_WIDTH - (int)(xLevelOffset * 0.2), (int)(200 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT2, null);
+
+        for (int i = 0; i < 4; i++) 
+            g.drawImage(bigCloudImage, 0 + i * BIG_CLOUD_WIDTH - (int)(xLevelOffset * 0.3), (int)(224 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+
+        for (int i = 0; i < smallClouds.length; i++)
+            g.drawImage(smallCloudImage, SMALL_CLOUD_WIDTH * 4 * i - (int)(xLevelOffset * 0.7), smallClouds[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
     }
 
     @Override
