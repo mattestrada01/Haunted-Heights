@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import com.example.Game;
+
+import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
 import ui.PauseOverlay;
@@ -18,6 +20,7 @@ public class Playing extends State implements Statemethods{
 
     private Player player;
     private LevelManager levelManager;
+    private EnemyManager enemyManager;
     private PauseOverlay pauseOverlay;
     private boolean pausedOrNot = false;
 
@@ -50,7 +53,9 @@ public class Playing extends State implements Statemethods{
 
     private void initializeClasses() {
         levelManager = new LevelManager(game);
-        // 130 and 570 for proper start
+        enemyManager = new EnemyManager(this);
+
+        // 130 and 570 for proper start or 200 for fall
         player = new Player(130, 200, (int)(64*Game.SCALE), (int)(64*Game.SCALE));
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
         pauseOverlay = new PauseOverlay(this);
@@ -61,6 +66,7 @@ public class Playing extends State implements Statemethods{
         if(!pausedOrNot) {
             levelManager.update();
             player.update();
+            enemyManager.update(levelManager.getCurrentLevel().getLevelData());
             checkIfAtBorder();
         }
         else {
@@ -86,16 +92,17 @@ public class Playing extends State implements Statemethods{
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(movingBackground, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
-
-        // must change for smaller scale
-        g.drawImage(handsImage, 975 - (int)(xLevelOffset), 721, HANDS_WIDTH, HANDS_HEIGHT, null);
-        g.drawImage(bottomImage, 850 - (int)(xLevelOffset), 598, Game.GAME_WIDTH / 3, Game.GAME_HEIGHT / 3, null);
+        g.drawImage(movingBackground, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);  
         
         drawClouds(g);
 
+         // must change for smaller scale
+        g.drawImage(handsImage, HANDS_X - (int)(xLevelOffset), HANDS_Y, HANDS_WIDTH, HANDS_HEIGHT, null);
+        g.drawImage(bottomImage, GROUND_X - (int)(xLevelOffset), GROUND_Y, Game.GAME_WIDTH / 3, Game.GAME_HEIGHT / 3, null);
+
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
+        enemyManager.draw(g, xLevelOffset);
 
         if(pausedOrNot) {
             g.setColor(new Color(0,0,0, 175));
@@ -109,8 +116,10 @@ public class Playing extends State implements Statemethods{
         for (int i = 0; i < 4; i++) 
             g.drawImage(bigCloudImage2, -150 + i * BIG_CLOUD_WIDTH - (int)(xLevelOffset * 0.2), (int)(200 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT2, null);
 
+        // change inner loop for smaller scale
         for (int i = 0; i < 4; i++) 
-            g.drawImage(bigCloudImage, 0 + i * BIG_CLOUD_WIDTH - (int)(xLevelOffset * 0.3), (int)(224 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+            for (int j = 0; j < 16; j++)
+                g.drawImage(bigCloudImage, 0 + i * BIG_CLOUD_WIDTH - (int)(xLevelOffset * 0.3), 0 + j*CLOUD_Y_REPEAT + (int)(224 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
 
         for (int i = 0; i < smallClouds.length; i++)
             g.drawImage(smallCloudImage, SMALL_CLOUD_WIDTH * 4 * i - (int)(xLevelOffset * 0.7), smallClouds[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);

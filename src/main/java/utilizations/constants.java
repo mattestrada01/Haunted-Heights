@@ -4,6 +4,46 @@ import com.example.Game;
 
 public class constants {
 
+    public static class EnemyConstants{
+        public static final int ENEMY1 = 0;
+
+        public static final int IDLE = 0;
+        public static final int RUNNING = 1;
+        public static final int ATTACK = 2;
+        public static final int HIT = 3;
+        public static final int DEAD = 4;
+
+        public static final int ENEMY1_WIDTH_DEFAULT = 72;
+        public static final int ENEMY1_HEIGHT_DEFAULT = 32;
+
+        public static final int ENEMY1_WIDTH = (int)(ENEMY1_WIDTH_DEFAULT * Game.SCALE);
+        public static final int ENEMY1_HEIGHT = (int)(ENEMY1_HEIGHT_DEFAULT * Game.SCALE);
+
+        public static final int ENEMY1_DRAWOFFSET_X = (int)(26*Game.SCALE);
+        public static final int ENEMY1_DRAWOFFSET_Y = (int)(1*Game.SCALE);
+
+
+        public static int GetSpriteID(int type, int state) {
+            switch (type) {
+                case ENEMY1:
+                    switch(state) {
+                        case IDLE:
+                            return 9;
+                        case RUNNING:
+                            return 6;
+                        case ATTACK:
+                            return 7;
+                        case HIT:
+                            return 4;
+                        case DEAD:
+                            return 5;
+                    }
+            }
+
+            return 0;
+        }
+    }
+
     public static class Environments {
         public static final int BIG_CLOUD_WIDTH_DEFAULT = 448;
         public static final int BIG_CLOUD_HEIGHT_DEFAULT = 101;
@@ -16,11 +56,23 @@ public class constants {
         public static final int SMALL_CLOUD_HEIGHT_DEFAULT = 24;
         public static final int SMALL_CLOUD_WIDTH = (int)(SMALL_CLOUD_WIDTH_DEFAULT * Game.SCALE);
         public static final int SMALL_CLOUD_HEIGHT = (int)(SMALL_CLOUD_HEIGHT_DEFAULT * Game.SCALE);
+        public static final int CLOUD_Y_REPEAT_DEFAULT = 8;
+        public static final int CLOUD_Y_REPEAT = (int)(CLOUD_Y_REPEAT_DEFAULT * Game.SCALE);
 
         public static final int HANDS_DEFAULT_WIDTH = 120;
         public static final int HANDS_DEFAULT_HEIGHT = 75;
         public static final int HANDS_WIDTH = (int)(HANDS_DEFAULT_WIDTH * Game.SCALE);
         public static final int HANDS_HEIGHT = (int)(HANDS_DEFAULT_HEIGHT * Game.SCALE);
+
+        public static final int HANDS_X_DEFAULT = 487;
+        public static final int HANDS_X = (int)(HANDS_X_DEFAULT * Game.SCALE);
+        public static final int HANDS_Y_DEFAULT = 360;
+        public static final int HANDS_Y = (int)(HANDS_Y_DEFAULT * Game.SCALE);
+
+        public static final int GROUND_X_DEFAULT = 425;
+        public static final int GROUND_X = (int)(GROUND_X_DEFAULT * Game.SCALE);
+        public static final int GROUND_Y_DEFAULT = 299;
+        public static final int GROUND_Y = (int)(GROUND_Y_DEFAULT * Game.SCALE);
     }
 
     public static class UI {
