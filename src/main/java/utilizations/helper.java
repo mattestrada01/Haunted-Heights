@@ -5,6 +5,8 @@ import java.awt.geom.Rectangle2D;
 import com.example.Game;
 
 public class helper {
+
+
     public static boolean CanMoveHere(float x, float y, float width, float height, int[][] lvlData) {
 		if (!IsSolid(x, y, lvlData))
 			if (!IsSolid(x + width, y + height, lvlData))
@@ -15,6 +17,15 @@ public class helper {
 						// to check the mid wall on left side
 							if (!IsSolid(x, y + height - (32*Game.SCALE), lvlData))
 								return true;
+		return false;
+	}
+
+	public static boolean CanMoveHereEnemy(float x, float y, float width, float height, int[][] lvlData) {
+		if (!IsSolid(x, y, lvlData))
+			if (!IsSolid(x + width, y + height, lvlData))
+				if (!IsSolid(x + width, y, lvlData))
+					if (!IsSolid(x, y + height, lvlData))
+						return true;
 		return false;
 	}
 
@@ -66,6 +77,18 @@ public class helper {
 		}
 	}
 
+	public static float GetEnemyYPosUnderRoofOrAboveFloor(Rectangle2D.Float hitbox, float airSpeed) {
+		int currentTile = (int) (hitbox.y / Game.TILES_SIZE);
+		if (airSpeed > 0) {
+			// Falling - touching floor
+			int tileYPos = currentTile * Game.TILES_SIZE;
+			int yOffset = (int) (Game.TILES_SIZE - hitbox.height);
+			return tileYPos + yOffset - 1;
+		} else
+			// Jumping
+			return currentTile * Game.TILES_SIZE;
+	}
+
 	public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, int[][] lvlData) {
 		// Check the pixel below bottomleft and bottomright
 		if (!IsSolid(hitbox.x, hitbox.y + hitbox.height + 1, lvlData))
@@ -73,6 +96,11 @@ public class helper {
 				return false;
 
 		return true;
+	}
 
+	
+
+	public static boolean IsFloor(Rectangle2D.Float hitbox, float xSpeed, int[][] lvlData) {
+		return IsSolid(hitbox.x + xSpeed, hitbox.y + hitbox.height + 1, lvlData);
 	}
 }
