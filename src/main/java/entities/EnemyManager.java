@@ -22,11 +22,10 @@ public class EnemyManager {
 
     private void addEnemies() {
         enemies1 = LoadSave.GetEnemies1();
-        System.out.println("size of enemies1: " + enemies1.size());
     }
 
     private void loadEnemyImages() {
-        enemy1arr = new BufferedImage[5][9];
+        enemy1arr = new BufferedImage[5][7];
         BufferedImage temp = LoadSave.GetSpriteAtlas(LoadSave.ENEMY1_SPRITE);
 
         for (int j = 0; j < enemy1arr.length; j++) {
@@ -36,9 +35,9 @@ public class EnemyManager {
         }
     }
 
-    public void update(int[][] lvlData) {
+    public void update(int[][] lvlData, Player player) {
         for (Enemy1 c : enemies1) {
-            c.update(lvlData);
+            c.update(lvlData, player);
         }
     }
 

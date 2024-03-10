@@ -8,19 +8,19 @@ public class constants {
         public static final int ENEMY1 = 0;
 
         public static final int IDLE = 0;
-        public static final int RUNNING = 1;
-        public static final int ATTACK = 2;
-        public static final int HIT = 3;
-        public static final int DEAD = 4;
+		public static final int RUNNING = 1;
+		public static final int ATTACK = 2;
+		public static final int HIT = 3;
+		public static final int DEAD = 4;
 
-        public static final int ENEMY1_WIDTH_DEFAULT = 72;
-        public static final int ENEMY1_HEIGHT_DEFAULT = 32;
+        public static final int ENEMY1_WIDTH_DEFAULT = 128;
+        public static final int ENEMY1_HEIGHT_DEFAULT = 128;
 
-        public static final int ENEMY1_WIDTH = (int)(ENEMY1_WIDTH_DEFAULT * Game.SCALE);
-        public static final int ENEMY1_HEIGHT = (int)(ENEMY1_HEIGHT_DEFAULT * Game.SCALE);
+        public static final int ENEMY1_WIDTH = (int)(ENEMY1_WIDTH_DEFAULT * Game.SCALE/2);
+        public static final int ENEMY1_HEIGHT = (int)(ENEMY1_HEIGHT_DEFAULT * Game.SCALE/2);
 
-        public static final int ENEMY1_DRAWOFFSET_X = (int)(26*Game.SCALE);
-        public static final int ENEMY1_DRAWOFFSET_Y = (int)(1*Game.SCALE);
+        public static final int ENEMY1_DRAWOFFSET_X = (int)(15*Game.SCALE);
+        public static final int ENEMY1_DRAWOFFSET_Y = (int)(33*Game.SCALE);
 
 
         public static int GetSpriteID(int type, int state) {
@@ -28,15 +28,15 @@ public class constants {
                 case ENEMY1:
                     switch(state) {
                         case IDLE:
-                            return 9;
-                        case RUNNING:
                             return 6;
-                        case ATTACK:
+                        case RUNNING:
                             return 7;
-                        case HIT:
-                            return 4;
-                        case DEAD:
+                        case ATTACK:
                             return 5;
+                        case HIT:
+                            return 3;
+                        case DEAD:
+                            return 6;
                     }
             }
 
