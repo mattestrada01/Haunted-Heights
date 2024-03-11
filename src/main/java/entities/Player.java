@@ -1,5 +1,6 @@
 package entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -32,15 +33,44 @@ public class Player extends Entity{
         initHitbox(x, y, (int)(23*Game.SCALE), (int)(34*Game.SCALE));
     }
 
+    // StatusBarUI
+	private BufferedImage statusBarImg;
+
+	private int statusBarWidth = (int) (192 * Game.SCALE);
+	private int statusBarHeight = (int) (58 * Game.SCALE);
+	private int statusBarX = (int) (10 * Game.SCALE);
+	private int statusBarY = (int) (10 * Game.SCALE);
+
+	private int healthBarWidth = (int) (150 * Game.SCALE);
+	private int healthBarHeight = (int) (4 * Game.SCALE);
+	private int healthBarXStart = (int) (34 * Game.SCALE);
+	private int healthBarYStart = (int) (14 * Game.SCALE);
+
+	private int maxHealth = 100;
+	private int currentHealth = maxHealth;
+	private int healthWidth = healthBarWidth;
+
     public void update() {
+        updateHealth();
         updatePosition();
         updateAnimation();
         setAnimation();
     }
 
+    private void updateHealth() {
+        healthWidth = (int) ((currentHealth / (float) maxHealth) * healthBarWidth);
+    }
+
     public void render(Graphics g, int lvlOffset) {
         g.drawImage(animations[playerAction][animationIndex], (int)(hitbox.x - xOffset) - lvlOffset, (int)(hitbox.y - yOffset), width, height, null);
         drawHitbox(g, lvlOffset);
+        drawUI(g);
+    }
+
+    private void drawUI(Graphics g) {
+        g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
+        g.setColor(Color.red);
+		g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, healthWidth, healthBarHeight);
     }
 
     private void updateAnimation() {
@@ -177,7 +207,9 @@ public class Player extends Entity{
              for (int i = 0; i < animations[j].length; i++){
                 animations[j][i] = image.getSubimage(i*128, j*128, 128, 128);
             }
-        }   
+        } 
+        
+        statusBarImg = LoadSave.GetSpriteAtlas(LoadSave.HEALTH);
     }
 
     public void loadLvlData(int[][] lvlData) {

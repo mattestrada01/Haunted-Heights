@@ -32,6 +32,7 @@ public class LoadSave {
     public static final String HANDS = "src/main/resources/hands.png";
     public static final String BOTTOM = "src/main/resources/bottomGround.png";
     public static final String ENEMY1_SPRITE = "src/main/resources/enemy1.png";
+    public static final String HEALTH = "src/main/resources/health_power_bar.png";
 
 
 
