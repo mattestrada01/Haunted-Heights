@@ -31,6 +31,7 @@ public class Playing extends State implements Statemethods{
     private boolean pausedOrNot;
     private boolean gameOver;
     private boolean lvlCompleted;
+    private boolean playerDying;
 
     private int xLevelOffset;
     private int leftBorder = (int)(0.2 * Game.GAME_WIDTH);
@@ -95,7 +96,11 @@ public class Playing extends State implements Statemethods{
 			pauseOverlay.update();
 		} else if (lvlCompleted) {
             completedOverlay.update();
-		} else if (!gameOver) {
+		} else if(gameOver){
+            gameOverOverlay.update();
+        } else if(playerDying){
+            player.update();
+        } else {
 			levelManager.update();
 			player.update();
 			enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
@@ -170,10 +175,6 @@ public class Playing extends State implements Statemethods{
             if(e.getButton() == MouseEvent.BUTTON3) {
                 player.setAttack2(true);
             }
-
-            if(e.getButton() == MouseEvent.BUTTON2) {
-                player.setDead(true);
-            }
         }
     }
 
@@ -184,7 +185,9 @@ public class Playing extends State implements Statemethods{
 				pauseOverlay.mousePressed(e);
 			else if (lvlCompleted)
 				completedOverlay.mousePressed(e);
-		}
+		} else {
+            gameOverOverlay.mousePressed(e);
+        }
     }
 
     @Override
@@ -194,7 +197,9 @@ public class Playing extends State implements Statemethods{
 				pauseOverlay.mouseReleased(e);
 			else if (lvlCompleted)
 				completedOverlay.mouseReleased(e);
-		}
+		}else {
+            gameOverOverlay.mouseReleased(e);
+        }
     }
 
     @Override
@@ -204,7 +209,9 @@ public class Playing extends State implements Statemethods{
 				pauseOverlay.mouseMoved(e);
 			else if (lvlCompleted)
 				completedOverlay.mouseMoved(e);
-		}
+		}else {
+            gameOverOverlay.mouseMoved(e);
+        }
     }
 
     public void mouseDragged(MouseEvent e) {
@@ -267,6 +274,7 @@ public class Playing extends State implements Statemethods{
     public void resetAll() {
         gameOver = false;
         pausedOrNot = false;
+        playerDying = false;
         player.resetAll();
         enemyManager.resetAllEnemies();
         lvlCompleted = false;
@@ -290,5 +298,9 @@ public class Playing extends State implements Statemethods{
 
     public void setLevelCompleted(boolean levelCompleted) {
         this.lvlCompleted = levelCompleted;
+    }
+
+    public void setPlayerDying(boolean playerDying) {
+        this.playerDying = playerDying;
     }
 }
