@@ -42,6 +42,24 @@ public class constants {
 
             return 0;
         }
+
+        public static int GetMaxHealth(int type) {
+            switch(type) {
+                case ENEMY1:
+                    return 10;
+                default:
+                    return 1;
+            }
+        }
+
+        public static int GetDamage(int type) {
+            switch(type) {
+                case ENEMY1:
+                    return 25;
+                default:
+                    return 1;
+            }
+        }
     }
 
     public static class Environments {
@@ -112,13 +130,13 @@ public class constants {
     }
 
     public static class PlayerConstants {
-        public static final int IDLE = 4;
-        public static final int RUNNING = 6;
-        public static final int JUMPING = 5;
-        public static final int HIT = 3;
         public static final int ATTACK_1 = 0;
         public static final int ATTACK_2 = 1;
         public static final int DEAD = 2;
+        public static final int HIT = 3;
+        public static final int IDLE = 4;
+        public static final int JUMPING = 5;
+        public static final int RUNNING = 6;
         public static final int FALLING = 7;
 
         public static int GetSpriteID(int player_action){

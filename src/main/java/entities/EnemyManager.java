@@ -2,6 +2,7 @@ package entities;
 
 import static utilizations.constants.EnemyConstants.*;
 import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -37,7 +38,8 @@ public class EnemyManager {
 
     public void update(int[][] lvlData, Player player) {
         for (Enemy1 c : enemies1) {
-            c.update(lvlData, player);
+            if(c.getActive())
+                c.update(lvlData, player);
         }
     }
 
@@ -46,10 +48,32 @@ public class EnemyManager {
     }
 
     private void drawEnemy1(Graphics g, int xLevelOffset) {
+        for (Enemy1 c : enemies1) 
+            if(c.getActive())
+            {
+                g.drawImage(enemy1arr[c.getState()][c.getAnimationIndex()], (int)c.getHitbox().x - xLevelOffset - ENEMY1_DRAWOFFSET_X + c.flipX(), 
+                                (int)c.getHitbox().y - ENEMY1_DRAWOFFSET_Y, ENEMY1_WIDTH * c.flipW(), 
+                                ENEMY1_HEIGHT, null);
+                c.drawHitbox(g, xLevelOffset);
+
+                c.drawAttackbox(g, xLevelOffset);
+            }
+    }
+
+    public void checkEnemyHit(Rectangle2D.Float attackBox) {
         for (Enemy1 c : enemies1) {
-            g.drawImage(enemy1arr[c.getState()][c.getAnimationIndex()], (int)c.getHitbox().x - xLevelOffset - ENEMY1_DRAWOFFSET_X, 
-                            (int)c.getHitbox().y - ENEMY1_DRAWOFFSET_Y, ENEMY1_WIDTH, ENEMY1_HEIGHT, null);
-            c.drawHitbox(g, xLevelOffset);
+            if(c.getActive())
+                if(attackBox.intersects(c.getHitbox())) {
+                    c.hurt(10);
+                    return;
+                }
+        }
+
+    }
+
+    public void resetAllEnemies() {
+        for(Enemy1 c : enemies1) {
+            c.resetEnemy();
         }
     }
 }
