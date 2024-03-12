@@ -133,7 +133,8 @@ public class PauseOverlay {
         }
         else if (isIn(e, replayButton)){
             if(replayButton.isMousePressed()){
-                System.out.println("replay the level");
+                playing.resetAll();
+                playing.unpauseGame();
             }
         }
         else if (isIn(e, unpauseButton)){

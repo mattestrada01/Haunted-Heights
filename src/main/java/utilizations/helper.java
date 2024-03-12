@@ -1,8 +1,16 @@
 package utilizations;
 
+import static utilizations.constants.EnemyConstants.ENEMY1;
+
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import com.example.Game;
+
+import entities.Enemy1;
 
 public class helper {
 
@@ -124,6 +132,50 @@ public class helper {
 	}
 
 	public static boolean IsFloor(Rectangle2D.Float hitbox, float xSpeed, int[][] lvlData) {
-		return IsSolid(hitbox.x + xSpeed, hitbox.y + hitbox.height + 1, lvlData);
+		if(xSpeed > 0)
+			return IsSolid(hitbox.x + hitbox.width + xSpeed, hitbox.y + hitbox.height + 1, lvlData);
+		else
+			return IsSolid(hitbox.x + xSpeed, hitbox.y + hitbox.height + 1, lvlData);
+	}
+
+	public static int[][] GetLevelData(BufferedImage image) {
+        int[][] lvlData = new int[image.getHeight()][image.getWidth()];
+
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getRed();
+                if (value >= 48){
+                    value = 0;
+                }
+                lvlData[j][i] = value;
+            }
+        }
+
+        return lvlData;
+    }
+
+	public static ArrayList<Enemy1> GetEnemies1(BufferedImage image) {
+        ArrayList<Enemy1> list = new ArrayList<>();
+		for (int j = 0; j < image.getHeight(); j++)
+			for (int i = 0; i < image.getWidth(); i++) {
+				Color color = new Color(image.getRGB(i, j));
+				int value = color.getGreen();
+				if (value == ENEMY1)
+					list.add(new Enemy1(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
+			}
+		return list;
+    }
+
+	public static Point GetPlayerSpawn(BufferedImage image) {
+			for (int j = 0; j < image.getHeight(); j++)
+				for (int i = 0; i < image.getWidth(); i++) {
+					Color color = new Color(image.getRGB(i, j));
+					int value = color.getGreen();
+					if (value == 100)
+						return new Point(i*Game.TILES_SIZE, j*Game.TILES_SIZE);
+				}
+
+			return new Point(2 * Game.TILES_SIZE, 4 * Game.TILES_SIZE);
 	}
 }
