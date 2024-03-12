@@ -2,6 +2,9 @@ package entities;
 
 import static utilizations.constants.EnemyConstants.*;
 import static utilizations.helper.*;
+
+import java.awt.geom.Rectangle2D;
+
 import static utilizations.constants.Directions.*;
 
 import com.example.Game;
@@ -11,19 +14,25 @@ public abstract class Enemy extends Entity {
         protected int tileY;
         protected float attackRange = Game.TILES_SIZE;
         protected int animationIndex, state, type;
-        protected int animationTick, animationSpeed = 25;
+        protected int animationTick, animationSpeed = 20;
         protected boolean inAir;
         protected boolean firstUpdate = true;
         protected float fallSpeed;
         protected float gravity = 0.04f * Game.SCALE;
-        protected float walkSpeed = 0.3f * Game.SCALE;
+        protected float walkSpeed = 0.35f * Game.SCALE;
         protected int walkDirection = LEFT;
+        protected int maxHealth;
+        protected int currentHealth;
+        protected boolean active = true;
+        protected boolean attackChecked;
 
 
         public Enemy(float x, float y, int width, int height, int type) {
             super(x, y, width, height);
             this.type = type;
             initHitbox(x, y, width, height); 
+            maxHealth = GetMaxHealth(type);
+            currentHealth = maxHealth;
         }
 
 
@@ -36,9 +45,13 @@ public abstract class Enemy extends Entity {
                 if (animationIndex >= GetSpriteID(type, state)) {
                     animationIndex = 0;
 
-                    if(state == ATTACK) {
+                    if(state == ATTACK) 
                         state = IDLE;
-                    }
+                    else if(state == HIT)
+                        state = IDLE;
+                    else if(state == DEAD)
+                        active = false;
+                    
                 }
             }
         }
@@ -122,10 +135,41 @@ public abstract class Enemy extends Entity {
             return state;
         }
 
+        public boolean getActive() {
+            return active;
+        }
+
         protected void changeWalkDirection() {
             if(walkDirection == LEFT)
                 walkDirection = RIGHT;
             else
                 walkDirection = LEFT;
+        }
+
+        public void hurt(int amount) {
+            currentHealth -= amount;
+            if(currentHealth <=0) {
+                stateChange(DEAD);
+            }
+            else {
+                stateChange(HIT);
+            }
+        }
+
+        protected void checkEnemyHit(Rectangle2D.Float attackBox, Player player) {
+            if(attackBox.intersects(player.hitbox))
+                player.changeHealth(-GetDamage(type));
+
+            attackChecked = true;
+        }
+
+        public void resetEnemy() {
+            hitbox.x = x;
+            hitbox.y = y;
+            firstUpdate = true;
+            currentHealth = maxHealth;
+            stateChange(IDLE);
+            active = true;
+            fallSpeed = 0;
         }
 }
