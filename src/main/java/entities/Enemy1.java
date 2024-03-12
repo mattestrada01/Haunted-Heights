@@ -64,10 +64,12 @@ public class Enemy1 extends Enemy{
                 stateChange(RUNNING);
                 break;
             case RUNNING:
-                if(canSeePlayer(lvlData, player))
+                if(canSeePlayer(lvlData, player)) {
                     turnTowardsPlayer(player);
-                if(playerAttackable(player))
-                    stateChange(ATTACK);
+                    
+                    if(playerAttackable(player))
+                        stateChange(ATTACK);
+                }
                 updateMoving(lvlData);
                 break;
             case ATTACK:

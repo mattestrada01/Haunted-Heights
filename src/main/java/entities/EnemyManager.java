@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import gamestates.*;
+import levels.Level;
 import utilizations.LoadSave;
 
 public class EnemyManager {
@@ -18,11 +19,10 @@ public class EnemyManager {
     public EnemyManager(Playing playing) {
         this.playing = playing;
         loadEnemyImages();
-        addEnemies();
     }
 
-    private void addEnemies() {
-        enemies1 = LoadSave.GetEnemies1();
+    public void loadEnemies(Level level) {
+        enemies1 = level.getEnemy1s();
     }
 
     private void loadEnemyImages() {
@@ -37,10 +37,14 @@ public class EnemyManager {
     }
 
     public void update(int[][] lvlData, Player player) {
-        for (Enemy1 c : enemies1) {
-            if(c.getActive())
-                c.update(lvlData, player);
-        }
+        boolean isAnyActive = false;
+		for (Enemy1 c : enemies1)
+			if (c.isActive()) {
+				c.update(lvlData, player);
+				isAnyActive = true;
+			}
+		if(!isAnyActive)
+			playing.setLevelCompleted(true);
     }
 
     public void draw(Graphics g, int xLevelOffset) {
@@ -49,7 +53,7 @@ public class EnemyManager {
 
     private void drawEnemy1(Graphics g, int xLevelOffset) {
         for (Enemy1 c : enemies1) 
-            if(c.getActive())
+            if(c.isActive())
             {
                 g.drawImage(enemy1arr[c.getState()][c.getAnimationIndex()], (int)c.getHitbox().x - xLevelOffset - ENEMY1_DRAWOFFSET_X + c.flipX(), 
                                 (int)c.getHitbox().y - ENEMY1_DRAWOFFSET_Y, ENEMY1_WIDTH * c.flipW(), 
@@ -62,7 +66,7 @@ public class EnemyManager {
 
     public void checkEnemyHit(Rectangle2D.Float attackBox) {
         for (Enemy1 c : enemies1) {
-            if(c.getActive())
+            if(c.isActive())
                 if(attackBox.intersects(c.getHitbox())) {
                     c.hurt(10);
                     return;
