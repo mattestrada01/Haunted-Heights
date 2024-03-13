@@ -34,6 +34,7 @@ public class LoadSave {
     public static final String ENEMY1_SPRITE = "src/main/resources/enemy1.png";
     public static final String HEALTH = "src/main/resources/health_power_bar.png";
     public static final String COMPLETED = "src/main/resources/completed.png";
+    public static final String DEATH = "src/main/resources/dead.png";
 
 
     public static BufferedImage GetSpriteAtlas(String fileName) {

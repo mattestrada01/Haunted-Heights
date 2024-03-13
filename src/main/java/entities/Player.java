@@ -17,7 +17,6 @@ public class Player extends Entity{
 
     private BufferedImage[][] animations;
     private int animationTick, animationIndex, animationSpeed = 40;
-    private int playerAction = IDLE;
     private boolean left, right, up, down, jump;
     private boolean moving = false, attacking = false, attacking2 = false, inAir = false, dead = false;
     private float playerSpeed = Game.SCALE;
@@ -56,6 +55,7 @@ public class Player extends Entity{
     public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
+        this.playerAction = IDLE;
         loadAnimations();
         initHitbox(x, y, (int)(23*Game.SCALE), (int)(34*Game.SCALE));
         initAttackbox();
@@ -64,7 +64,6 @@ public class Player extends Entity{
     public void setSpawn(Point spawnPoint) {
         this.x = spawnPoint.x;
         this.y = spawnPoint.y;
-
         hitbox.x = x;
         hitbox.y = y;
     }
@@ -76,7 +75,17 @@ public class Player extends Entity{
     public void update() {
         updateHealth();
         if(currentHealth <= 0) {
-            playing.setGameOver(true);
+            if(playerAction != DEAD) {
+                playerAction = DEAD;
+                animationTick = 0;
+                animationIndex = 0;
+                playing.setPlayerDying(true);
+            } else if(animationIndex == GetSpriteID(DEAD) - 1 && animationTick >= animationSpeed - 1) {
+                playing.setGameOver(true);
+            }else {
+                updateAnimation();
+            }
+
             return;
         }
 
@@ -166,7 +175,6 @@ public class Player extends Entity{
         else {
             playerAction = IDLE;
             this.animationSpeed = 40;
-
         }
 
         if (attacking) {
@@ -192,11 +200,6 @@ public class Player extends Entity{
             //    animationTick = 0;
             //    return;
             //}
-        }
-
-        if (dead) {
-            playerAction = DEAD;
-            this.animationSpeed = 30;
         }
 
         if (inAir) { 
