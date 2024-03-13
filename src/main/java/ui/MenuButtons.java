@@ -80,4 +80,8 @@ public class MenuButtons {
         mousePressed = false;
     }
 
+    public Gamestate getState() {
+        return state;
+    }
+
 }

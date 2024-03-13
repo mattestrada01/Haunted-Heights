@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 
 import com.example.Game;
 
+import audio.AudioPlayer;
 import gamestates.Playing;
 import utilizations.LoadSave;
 import static utilizations.constants.PlayerConstants.*;
@@ -55,7 +56,7 @@ public class Player extends Entity{
     public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
-        this.playerAction = IDLE;
+        this.state = IDLE;
         loadAnimations();
         initHitbox(x, y, (int)(23*Game.SCALE), (int)(34*Game.SCALE));
         initAttackbox();
@@ -75,13 +76,16 @@ public class Player extends Entity{
     public void update() {
         updateHealth();
         if(currentHealth <= 0) {
-            if(playerAction != DEAD) {
-                playerAction = DEAD;
+            if(state != DEAD) {
+                state = DEAD;
                 animationTick = 0;
                 animationIndex = 0;
                 playing.setPlayerDying(true);
+                playing.getGame().getAudioPlayer().playEffect(AudioPlayer.DIE);
             } else if(animationIndex == GetSpriteID(DEAD) - 1 && animationTick >= animationSpeed - 1) {
                 playing.setGameOver(true);
+                playing.getGame().getAudioPlayer().stopSong();
+                playing.getGame().getAudioPlayer().playEffect(AudioPlayer.GAMEOVER);
             }else {
                 updateAnimation();
             }
@@ -106,6 +110,7 @@ public class Player extends Entity{
 
         attackChecked = true;
         playing.checkEnemyHit(attackBox);
+        playing.getGame().getAudioPlayer().playAttackSound();
     }
 
     private void updateAttackbox() {
@@ -132,7 +137,7 @@ public class Player extends Entity{
     }
 
     public void render(Graphics g, int lvlOffset) {
-        g.drawImage(animations[playerAction][animationIndex], (int)(hitbox.x - xOffset) - lvlOffset + flipX, (int)(hitbox.y - yOffset), width*flipW, height, null);
+        g.drawImage(animations[state][animationIndex], (int)(hitbox.x - xOffset) - lvlOffset + flipX, (int)(hitbox.y - yOffset), width*flipW, height, null);
         //drawHitbox(g, lvlOffset);
         //drawAttackbox(g, lvlOffset);
         drawUI(g);
@@ -154,7 +159,7 @@ public class Player extends Entity{
         if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex++;
-            if(animationIndex >= GetSpriteID(playerAction)) {
+            if(animationIndex >= GetSpriteID(state)) {
                 animationIndex = 0;
                 attacking = false;
                 attacking2 = false;
@@ -166,19 +171,19 @@ public class Player extends Entity{
 
     private void setAnimation() {
 
-        int startAnimation = playerAction;
+        int startAnimation = state;
 
         if (moving) {
-            playerAction = RUNNING;
+            state = RUNNING;
             this.animationSpeed = 20;
         }
         else {
-            playerAction = IDLE;
+            state = IDLE;
             this.animationSpeed = 40;
         }
 
         if (attacking) {
-            playerAction = ATTACK_1;
+            state = ATTACK_1;
             this.animationSpeed = 10;
 
             // causes jumping bug when clicking attack
@@ -191,7 +196,7 @@ public class Player extends Entity{
 
         // causes jumping bug when clicking attack
         if (attacking2) {
-            playerAction = ATTACK_2;
+            state = ATTACK_2;
             this.animationSpeed = 10;
 
             // causes jumping bug when clicking attack
@@ -203,11 +208,11 @@ public class Player extends Entity{
         }
 
         if (inAir) { 
-                playerAction = JUMPING;
+                state = JUMPING;
                 this.animationSpeed = 15;
         }
 
-        if (startAnimation != playerAction) {
+        if (startAnimation != state) {
             resetAniTick();
         }
     }
@@ -270,6 +275,7 @@ public class Player extends Entity{
             return;
         }
 
+        playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
         inAir = true;
         airSpeed = jumpSpeed;
     }
@@ -373,7 +379,7 @@ public class Player extends Entity{
         attacking2 = false;
         dead = false;
         moving = false;
-        playerAction = IDLE;
+        state = IDLE;
         currentHealth = maxHealth;
 
         hitbox.x = x;

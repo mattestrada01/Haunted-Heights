@@ -292,12 +292,18 @@ public class Playing extends State implements Statemethods{
         return enemyManager;
     }
 
+    public LevelManager getLevelManager() {
+        return levelManager;
+    }
+
     public void setMaxLevelOffset(int levelOffset) {
         this.maxXLevelOffset = levelOffset;
     }
 
     public void setLevelCompleted(boolean levelCompleted) {
         this.lvlCompleted = levelCompleted;
+        if(levelCompleted) 
+            game.getAudioPlayer().lvlCompleted();
     }
 
     public void setPlayerDying(boolean playerDying) {
