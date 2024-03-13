@@ -48,10 +48,22 @@ public class Player extends Entity{
 	private int healthBarXStart = (int) (34 * Game.SCALE);
 	private int healthBarYStart = (int) (14 * Game.SCALE);
 
+    private int powerBarWidth = (int) (104 * Game.SCALE);
+	private int powerBarHeight = (int) (2 * Game.SCALE);
+	private int powerBarXStart = (int) (44 * Game.SCALE);
+	private int powerBarYStart = (int) (34 * Game.SCALE);
+	private int powerWidth = powerBarWidth;
+	private int powerMaxValue = 200;
+	private int powerValue = powerMaxValue;
+
 	private int maxHealth = 100;
 	private int currentHealth = maxHealth;
 	private int healthWidth = healthBarWidth;
     private Playing playing;
+    private boolean dashAttackActive;
+    private int dashAttackTick;
+    private int dashGrowSpeed = 15;
+    private int dashGrowTick;
 
     public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
@@ -75,6 +87,7 @@ public class Player extends Entity{
 
     public void update() {
         updateHealth();
+        updatePower();
         if(currentHealth <= 0) {
             if(state != DEAD) {
                 state = DEAD;
@@ -95,7 +108,17 @@ public class Player extends Entity{
 
         updateAttackbox();
         updatePosition();
-        if(attacking || attacking2)
+
+        if(moving) {
+            if(dashAttackActive) {
+                dashAttackTick++;
+                if(dashAttackTick >= 35) {
+                    dashAttackTick = 0;
+                    dashAttackActive = false;
+                }
+            }
+        }
+        if(attacking || dashAttackActive)
             checkAttack();
         updateAnimation();
         setAnimation();
@@ -104,19 +127,24 @@ public class Player extends Entity{
     private void checkAttack() {
         // this aniIndex can be 2 if you updat the animation start index below
         // checking at animation index 1
-        if(attackChecked || animationIndex != 1) {
+        if(attackChecked || (animationIndex != 2 && animationIndex != 4)) {
             return;
         }
 
         attackChecked = true;
+
+        if(dashAttackActive) {
+            attackChecked = false;
+        }
+
         playing.checkEnemyHit(attackBox);
         playing.getGame().getAudioPlayer().playAttackSound();
     }
 
     private void updateAttackbox() {
-        if(right) {
+        if(right || (dashAttackActive && flipW == 1)) {
             attackBox.x = hitbox.x + hitbox.width + (int)(Game.SCALE*5);
-        }else if (left) {
+        }else if (left || (dashAttackActive && flipW == -1)) {
             attackBox.x = hitbox.x - hitbox.width - (int)(Game.SCALE*2);
         }
 
@@ -125,6 +153,26 @@ public class Player extends Entity{
 
     private void updateHealth() {
         healthWidth = (int) ((currentHealth / (float) maxHealth) * healthBarWidth);
+    }
+
+    private void updatePower() {
+        powerWidth = (int)((powerValue / (float) powerMaxValue) * powerBarWidth);
+        dashGrowTick++;
+
+        if(dashGrowTick >= dashGrowSpeed) {
+            dashGrowTick = 0;
+            changePower(2);
+        }
+    }
+
+    private void changePower(int i) {
+        powerValue += i;
+        if(powerValue >= powerMaxValue) {
+            powerValue = powerMaxValue;
+        }
+        else if(powerValue <= 0) {
+            powerValue = 0;
+        }
     }
 
     public void changeHealth(int healthValue) {
@@ -149,21 +197,26 @@ public class Player extends Entity{
     }
 
     private void drawUI(Graphics g) {
+        // health bar
         g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
         g.setColor(Color.red);
 		g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, healthWidth, healthBarHeight);
+
+        // power bar
+        g.setColor(Color.cyan);
+        g.fillRect(powerBarXStart + statusBarX, powerBarYStart + statusBarY, powerWidth, powerBarHeight);
     }
 
     private void updateAnimation() {
         animationTick++;
+
         if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex++;
+
             if(animationIndex >= GetSpriteID(state)) {
                 animationIndex = 0;
-                attacking = false;
-                attacking2 = false;
-                dead = false;
+                attacking = false;;
                 attackChecked = false;
             }
         }
@@ -182,22 +235,35 @@ public class Player extends Entity{
             this.animationSpeed = 40;
         }
 
+        if (inAir) { 
+            state = JUMPING;
+            this.animationSpeed = 15;
+        }
+
+        if(dashAttackActive) {
+            state = ATTACK_1;
+            this.animationSpeed = 10;
+            animationIndex = 4;
+            animationTick = 0;
+            return;
+        }
+
         if (attacking) {
             state = ATTACK_1;
             this.animationSpeed = 10;
 
             // causes jumping bug when clicking attack
-            //if(startAnimation != ATTACK_1) {
-            //    animationIndex = 2;
-             //   animationTick = 0;
-             //   return;
-            //}
+            if(startAnimation != ATTACK_1) {
+                animationIndex = 2;
+                animationTick = 0;
+                return;
+            }
         }
 
         // causes jumping bug when clicking attack
-        if (attacking2) {
-            state = ATTACK_2;
-            this.animationSpeed = 10;
+        //if (attacking2) {
+         //   state = ATTACK_2;
+         //   this.animationSpeed = 10;
 
             // causes jumping bug when clicking attack
             //if(startAnimation != ATTACK_2) {
@@ -205,12 +271,7 @@ public class Player extends Entity{
             //    animationTick = 0;
             //    return;
             //}
-        }
-
-        if (inAir) { 
-                state = JUMPING;
-                this.animationSpeed = 15;
-        }
+        //}
 
         if (startAnimation != state) {
             resetAniTick();
@@ -227,11 +288,11 @@ public class Player extends Entity{
 
 		if (jump)
 			jump();
-		//if (!left && !right && !inAir)
-			//return;
+		
         if(!inAir)
-            if((!left && !right) || (right && left))
-                return;
+            if(!dashAttackActive)
+                if((!left && !right) || (right && left))
+                    return;
 
 		float xSpeed = 0;
 
@@ -246,11 +307,24 @@ public class Player extends Entity{
             flipW = 1;
         }
 
+        if(dashAttackActive) {
+            if(!left && !right){
+                if(flipW == -1) {
+                    xSpeed = -playerSpeed;
+                }
+                else {
+                    xSpeed = playerSpeed;
+                }
+            }
+
+            xSpeed *= 3;
+        }
+
 		if (!inAir)
 			if (!IsEntityOnFloor(hitbox, lvlData))
 				inAir = true;
 
-		if (inAir) {
+		if (inAir && !dashAttackActive) {
 			if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
 				    hitbox.y += airSpeed;
 				    airSpeed += gravity;
@@ -271,10 +345,11 @@ public class Player extends Entity{
 	}
 
     private void jump() {
-        if (inAir) {
+        if (inAir || powerValue < 40) {
             return;
         }
 
+        changePower(-40);
         playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
         inAir = true;
         airSpeed = jumpSpeed;
@@ -290,6 +365,10 @@ public class Player extends Entity{
 			hitbox.x += xSpeed;
 		} else {
 			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
+            if(dashAttackActive) {
+                dashAttackActive = false;
+                dashAttackTick = 0;
+            }
 		}
 
 	}
@@ -381,11 +460,22 @@ public class Player extends Entity{
         moving = false;
         state = IDLE;
         currentHealth = maxHealth;
+        powerValue = powerMaxValue;
 
         hitbox.x = x;
         hitbox.y = y;
 
         if(!IsEntityOnFloor(hitbox, lvlData))
             inAir = true;
-    }    
+    } 
+    
+    public void powerAttack() {
+        if(dashAttackActive) {
+            return;  
+        }
+        if(powerValue >= 70) {
+            dashAttackActive = true;
+            changePower(-70);
+        }
+    }
 }
