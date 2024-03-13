@@ -84,4 +84,8 @@ public class LevelManager {
     public int getAmountofLevels() {
         return levels.size();
     }
+
+    public int getLevelIndex() {
+        return levelIndex;
+    }
 }
