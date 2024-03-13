@@ -19,7 +19,7 @@ public class LoadSave {
     public static final String PLAYER_ATLAS = "src/main/resources/enchant_sprite1.png";
     public static final String LEVEL_ATLAS = "src/main/resources/outsideSprites1.png";
     public static final String MENU_BUTTONS = "src/main/resources/menu_buttons3.png";
-    public static final String MENU = "src/main/resources/menu3.png";
+    public static final String MENU = "src/main/resources/menu4.png";
     public static final String PAUSE = "src/main/resources/pause3.png";
     public static final String SOUND_BUTTON = "src/main/resources/sound_button.png";
     public static final String URM_BUTTONS = "src/main/resources/urm_buttons.png";
@@ -35,6 +35,8 @@ public class LoadSave {
     public static final String HEALTH = "src/main/resources/health_power_bar.png";
     public static final String COMPLETED = "src/main/resources/completed.png";
     public static final String DEATH = "src/main/resources/dead.png";
+    public static final String OPTIONS_MENU = "src/main/resources/options_menu1.png";
+    public static final String OPTIONS_BACKGROUND = "src/main/resources/scaryOptions.png";
 
 
     public static BufferedImage GetSpriteAtlas(String fileName) {

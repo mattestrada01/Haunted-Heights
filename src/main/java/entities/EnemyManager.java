@@ -58,9 +58,9 @@ public class EnemyManager {
                 g.drawImage(enemy1arr[c.getState()][c.getAnimationIndex()], (int)c.getHitbox().x - xLevelOffset - ENEMY1_DRAWOFFSET_X + c.flipX(), 
                                 (int)c.getHitbox().y - ENEMY1_DRAWOFFSET_Y, ENEMY1_WIDTH * c.flipW(), 
                                 ENEMY1_HEIGHT, null);
-                c.drawHitbox(g, xLevelOffset);
-
-                c.drawAttackbox(g, xLevelOffset);
+                                
+                //c.drawHitbox(g, xLevelOffset);
+                //c.drawAttackbox(g, xLevelOffset);
             }
     }
 

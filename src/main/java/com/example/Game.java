@@ -1,9 +1,12 @@
 package com.example;
 
 import java.awt.Graphics;
+
+import gamestates.GameOptions;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
+import ui.AudioOptions;
 import utilizations.LoadSave;
 
 public class Game implements Runnable {
@@ -14,8 +17,10 @@ public class Game implements Runnable {
     private final int FPS = 130;
     private final int UPS = 200;
 
+    private AudioOptions audioOptions;
     private Playing playing;
     private Menu menu;
+    private GameOptions options;
     
     public final static int TILES_DEFAULT = 32;
     public final static float SCALE = 2f;
@@ -37,8 +42,10 @@ public class Game implements Runnable {
     }
 
     private void initializeClasses() {
+        audioOptions = new AudioOptions();
         menu = new Menu(this);
         playing = new Playing(this);
+        options = new GameOptions(this);
     }
 
     private void startGameLoop() {
@@ -55,6 +62,8 @@ public class Game implements Runnable {
                 playing.update();
                 break;
             case OPTIONS:
+                options.update();
+                break;
             case QUIT:
             default:
                 System.exit(0);
@@ -69,6 +78,9 @@ public class Game implements Runnable {
                 break;
             case PLAYING:
                 playing.draw(g);
+                break;
+            case OPTIONS:
+                options.draw(g);
                 break;
             default:
                 break;
@@ -132,6 +144,14 @@ public class Game implements Runnable {
 
     public Playing getPlaying() {
         return playing;
+    }
+
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
+    }  
+
+    public GameOptions getGameOptions() {
+        return options;
     }
 }
 
