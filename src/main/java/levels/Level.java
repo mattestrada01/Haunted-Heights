@@ -10,6 +10,7 @@ import com.example.Game;
 import entities.Enemy1;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Spike;
 import utilizations.helper;
 
 public class Level {
@@ -17,7 +18,9 @@ public class Level {
     private BufferedImage image;
     private ArrayList<Enemy1> enemy1s;
     private ArrayList<Potion> potions;
-    private ArrayList<GameContainer> containers;
+    private ArrayList<GameContainer> containers;    
+    private ArrayList<Spike> spikes;
+    
     private int[][] lvlData;
     private int levelTilesWide;
     private int maxTilesOffset;
@@ -30,8 +33,13 @@ public class Level {
         createEnemies();
         createPotions();
         createContainers();
+        createSpikes();
         calculateLevelOffset();
         calcPlayerSpawn();
+    }
+
+    private void createSpikes() {
+        spikes = helper.GetSpikes(image);
     }
 
     private void createContainers() {
@@ -86,5 +94,9 @@ public class Level {
 
     public ArrayList<GameContainer> getContainers() {
         return containers;
+    }
+
+    public ArrayList<Spike> getSpikes() {
+        return spikes;
     }
 }
