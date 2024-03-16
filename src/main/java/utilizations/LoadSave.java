@@ -37,6 +37,9 @@ public class LoadSave {
     public static final String DEATH = "src/main/resources/dead.png";
     public static final String OPTIONS_MENU = "src/main/resources/options_menu1.png";
     public static final String OPTIONS_BACKGROUND = "src/main/resources/scaryOptions.png";
+    public static final String POTIONS = "src/main/resources/potions_sprites.png";
+    public static final String OBJECTS = "src/main/resources/objects_sprites.png";
+
 
 
     public static BufferedImage GetSpriteAtlas(String fileName) {
