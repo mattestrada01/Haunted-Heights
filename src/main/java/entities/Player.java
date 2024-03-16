@@ -70,7 +70,7 @@ public class Player extends Entity{
         this.playing = playing;
         this.state = IDLE;
         this.maxHealth = 100;
-        this.currentHealth = 35;
+        this.currentHealth = maxHealth;
         loadAnimations();
         initHitbox(x, y, (int)(23*Game.SCALE), (int)(34*Game.SCALE));
         initAttackbox();
@@ -113,6 +113,8 @@ public class Player extends Entity{
 
         if(moving) {
             checkPotionTouched();
+            checkTouchedSpikes();
+
             if(dashAttackActive) {
                 dashAttackTick++;
                 if(dashAttackTick >= 35) {
@@ -125,6 +127,10 @@ public class Player extends Entity{
             checkAttack();
         updateAnimation();
         setAnimation();
+    }
+
+    private void checkTouchedSpikes() {
+        playing.checkTouchedSpikes(this);
     }
 
     private void checkPotionTouched() {
@@ -171,6 +177,10 @@ public class Player extends Entity{
             dashGrowTick = 0;
             changePower(2);
         }
+    }
+
+    public void kill() {
+        currentHealth = 0;
     }
 
     public void changePower(int i) {
@@ -467,7 +477,7 @@ public class Player extends Entity{
         dead = false;
         moving = false;
         state = IDLE;
-        currentHealth = currentHealth;
+        currentHealth = maxHealth;
         powerValue = powerMaxValue;
 
         hitbox.x = x;

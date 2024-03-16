@@ -1,18 +1,11 @@
 package utilizations;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
-
-import com.example.Game;
-import static utilizations.constants.EnemyConstants.ENEMY1;
-import entities.Enemy1;
 
 public class LoadSave {
 
@@ -39,7 +32,7 @@ public class LoadSave {
     public static final String OPTIONS_BACKGROUND = "src/main/resources/scaryOptions.png";
     public static final String POTIONS = "src/main/resources/potions_sprites.png";
     public static final String OBJECTS = "src/main/resources/objects_sprites.png";
-
+    public static final String TRAPS = "src/main/resources/traps.png";
 
 
     public static BufferedImage GetSpriteAtlas(String fileName) {

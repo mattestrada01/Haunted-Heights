@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Float;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -297,6 +296,10 @@ public class Playing extends State implements Statemethods{
 
     public void checkObjectHit(Rectangle2D.Float attackBox) {
         objectManager.checkObjectHit(attackBox);
+    }
+
+    public void checkTouchedSpikes(Player p) {
+        objectManager.checkTouchedSpikes(p);
     }
 
     public void setGameOver(boolean gameOver) {
