@@ -56,8 +56,8 @@ public class Player extends Entity{
 	private int powerMaxValue = 200;
 	private int powerValue = powerMaxValue;
 
-	private int maxHealth = 100;
-	private int currentHealth = maxHealth;
+	private int maxHealth;
+	private int currentHealth;
 	private int healthWidth = healthBarWidth;
     private Playing playing;
     private boolean dashAttackActive;
@@ -69,6 +69,8 @@ public class Player extends Entity{
         super(x, y, width, height);
         this.playing = playing;
         this.state = IDLE;
+        this.maxHealth = 100;
+        this.currentHealth = 35;
         loadAnimations();
         initHitbox(x, y, (int)(23*Game.SCALE), (int)(34*Game.SCALE));
         initAttackbox();
@@ -110,6 +112,7 @@ public class Player extends Entity{
         updatePosition();
 
         if(moving) {
+            checkPotionTouched();
             if(dashAttackActive) {
                 dashAttackTick++;
                 if(dashAttackTick >= 35) {
@@ -122,6 +125,10 @@ public class Player extends Entity{
             checkAttack();
         updateAnimation();
         setAnimation();
+    }
+
+    private void checkPotionTouched() {
+        playing.checkPotionTouched(hitbox);
     }
 
     private void checkAttack() {
@@ -138,6 +145,7 @@ public class Player extends Entity{
         }
 
         playing.checkEnemyHit(attackBox);
+        playing.checkObjectHit(attackBox);
         playing.getGame().getAudioPlayer().playAttackSound();
     }
 
@@ -165,7 +173,7 @@ public class Player extends Entity{
         }
     }
 
-    private void changePower(int i) {
+    public void changePower(int i) {
         powerValue += i;
         if(powerValue >= powerMaxValue) {
             powerValue = powerMaxValue;
@@ -459,7 +467,7 @@ public class Player extends Entity{
         dead = false;
         moving = false;
         state = IDLE;
-        currentHealth = maxHealth;
+        currentHealth = currentHealth;
         powerValue = powerMaxValue;
 
         hitbox.x = x;

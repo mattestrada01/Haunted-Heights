@@ -23,6 +23,7 @@ public class AudioPlayer {
 	public static int LVL_COMPLETED = 3;
 	public static int ATTACK_ONE = 4;
 	public static int ATTACK_TWO = 5;
+	public static int TOUCH = 6;
 
     private Clip[] songs, effects;
     private int currentSoundId;
@@ -46,7 +47,7 @@ public class AudioPlayer {
     }
 
     private void loadEffects() {
-        String[] effectNames = {"death", "jump", "gameOver", "levelComplete", "slice1", "slice2"};
+        String[] effectNames = {"death", "jump", "gameOver", "levelComplete", "slice1", "slice2", "touch"};
         effects = new Clip[effectNames.length];
 
         for(int i = 0; i < effects.length; i++) {

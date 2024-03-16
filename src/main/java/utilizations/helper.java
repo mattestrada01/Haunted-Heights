@@ -1,6 +1,7 @@
 package utilizations;
 
 import static utilizations.constants.EnemyConstants.ENEMY1;
+import static utilizations.constants.ObjectConstants.*;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import com.example.Game;
 
 import entities.Enemy1;
+import objects.GameContainer;
+import objects.Potion;
 
 public class helper {
 
@@ -178,4 +181,30 @@ public class helper {
 
 			return new Point(2 * Game.TILES_SIZE, 4 * Game.TILES_SIZE);
 	}
+
+	public static ArrayList<Potion> GetPotions(BufferedImage image) {
+        ArrayList<Potion> list = new ArrayList<>();
+		for (int j = 0; j < image.getHeight(); j++)
+			for (int i = 0; i < image.getWidth(); i++) {
+				Color color = new Color(image.getRGB(i, j));
+				int value = color.getBlue();
+				if (value == RED_POTION || value == BLUE_POTION)
+					list.add(new Potion(i*Game.TILES_SIZE, j*Game.TILES_SIZE, value));	
+			}
+		return list;
+    }
+
+	public static ArrayList<GameContainer> GetContainers(BufferedImage image) {
+        ArrayList<GameContainer> list = new ArrayList<>();
+		for (int j = 0; j < image.getHeight(); j++)
+			for (int i = 0; i < image.getWidth(); i++) {
+				Color color = new Color(image.getRGB(i, j));
+				int value = color.getBlue();
+				if (value == BOX || value == BARREL)
+					list.add(new GameContainer(i*Game.TILES_SIZE, j*Game.TILES_SIZE, value));	
+			}
+		return list;
+    }
+
+
 }

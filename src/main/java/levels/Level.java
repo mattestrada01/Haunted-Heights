@@ -8,11 +8,16 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import com.example.Game;
 import entities.Enemy1;
+import objects.GameContainer;
+import objects.Potion;
+import utilizations.helper;
 
 public class Level {
 
     private BufferedImage image;
     private ArrayList<Enemy1> enemy1s;
+    private ArrayList<Potion> potions;
+    private ArrayList<GameContainer> containers;
     private int[][] lvlData;
     private int levelTilesWide;
     private int maxTilesOffset;
@@ -23,8 +28,18 @@ public class Level {
         this.image = image;
         createLevelData();
         createEnemies();
+        createPotions();
+        createContainers();
         calculateLevelOffset();
         calcPlayerSpawn();
+    }
+
+    private void createContainers() {
+        containers = helper.GetContainers(image);
+    }
+
+    private void createPotions() {
+        potions = helper.GetPotions(image);
     }
 
     private void calcPlayerSpawn() {
@@ -63,5 +78,13 @@ public class Level {
 
     public Point getPlayerSpawn() {
         return playerSpawn;
+    }
+
+    public ArrayList<Potion> getPotions() {
+        return potions;
+    }
+
+    public ArrayList<GameContainer> getContainers() {
+        return containers;
     }
 }
