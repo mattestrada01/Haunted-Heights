@@ -1,8 +1,6 @@
 package entities;
 
 import static utilizations.constants.EnemyConstants.*;
-import static utilizations.helper.*;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;

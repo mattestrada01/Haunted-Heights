@@ -8,7 +8,6 @@ import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
 import ui.AudioOptions;
-import utilizations.LoadSave;
 
 public class Game implements Runnable {
 

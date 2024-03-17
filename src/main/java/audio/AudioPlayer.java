@@ -27,7 +27,7 @@ public class AudioPlayer {
 
     private Clip[] songs, effects;
     private int currentSoundId;
-    private float volume = 0.7f;
+    private float volume = 0.5f;
     private boolean songMute, effectMute;
     private Random rand = new Random();
 
