@@ -15,7 +15,7 @@ public class constants {
         public static final int SPIKE = 4;
 
 		public static final int RED_POTION_VALUE = 15;
-		public static final int BLUE_POTION_VALUE = 30;
+		public static final int BLUE_POTION_VALUE = 60;
 
 		public static final int CONTAINER_WIDTH_DEFAULT = 40;
 		public static final int CONTAINER_HEIGHT_DEFAULT = 30;
