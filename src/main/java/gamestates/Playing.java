@@ -135,8 +135,8 @@ public class Playing extends State implements Statemethods{
         drawClouds(g);
 
          // must change for smaller scale
-        g.drawImage(handsImage, HANDS_X - (int)(xLevelOffset), HANDS_Y, HANDS_WIDTH, HANDS_HEIGHT, null);
-        g.drawImage(bottomImage, GROUND_X - (int)(xLevelOffset), GROUND_Y, Game.GAME_WIDTH / 3, Game.GAME_HEIGHT / 3, null);
+        //g.drawImage(handsImage, HANDS_X - (int)(xLevelOffset), HANDS_Y, HANDS_WIDTH, HANDS_HEIGHT, null);
+        //g.drawImage(bottomImage, GROUND_X - (int)(xLevelOffset), GROUND_Y, Game.GAME_WIDTH / 3, Game.GAME_HEIGHT / 3, null);
 
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
