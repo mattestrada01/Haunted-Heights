@@ -1,6 +1,6 @@
 # Haunted Heights 👻
 
-Haunted Heights is a fully custom-built 2D platformer video game developed in Java without the use of external libraries or game engines. Every mechanic—from collision detection to enemy AI—was hand-coded from scratch.
+Haunted Heights is a fully custom-built 2D platformer video game developed in Java without the use of external libraries or game engines. Every mechanic, from collision detection to enemy AI, was hand-coded from scratch.
 
 ## 🎮 Features
 
@@ -33,7 +33,7 @@ Check out a live walkthrough of the game:
 
 ## 🧠 Motivation
 
-This project was created as a personal challenge to better understand object-oriented programming, game loop architecture, and the fundamentals of 2D game development without relying on frameworks. Every aspect—from physics to sprite animations—was programmed manually for educational purposes.
+This project was created as a personal challenge to better understand object-oriented programming, game loop architecture, and the fundamentals of 2D game development without relying on frameworks. Every aspect such as the physics, sprite animations, and level creation was programmed manually for educational purposes.
 
 ---
 
