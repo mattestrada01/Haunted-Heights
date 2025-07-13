@@ -12,6 +12,10 @@ Haunted Heights is a fully custom-built 2D platformer video game developed in Ja
 - Menu and game over screens
 - Main audio and sound effects
 
+## 🖼️ Preview
+
+![Gameplay Preview](https://imgur.com/a/haunted-heights-oLGpfSJ)
+
 ## 🛠️ Technologies Used
 
 - **Language:** Java
