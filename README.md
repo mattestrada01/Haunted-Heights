@@ -14,7 +14,7 @@ Haunted Heights is a fully custom-built 2D platformer video game developed in Ja
 
 ## 🖼️ Preview
 
-![Gameplay Preview](https://imgur.com/a/haunted-heights-oLGpfSJ)
+![Gameplay Preview](https://i.imgur.com/W8jSDuR.gif)
 
 ## 🛠️ Technologies Used
 
